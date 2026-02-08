@@ -24,56 +24,55 @@
         <!-- 左侧：表单 -->
         <div class="form-section">
           <form @submit.prevent="publish">
-            <!-- 基本信息 -->
             <section class="form-group">
-              <h2 class="section-title">基本信息</h2>
+              <h2 class="section-title">{{ t('editor.basicInfo') }}</h2>
               
               <div class="field">
-                <label class="field-label">素材名称 *</label>
+                <label class="field-label">{{ t('editor.nameRequired') }}</label>
                 <input 
                   v-model="form.name" 
                   type="text" 
                   class="field-input" 
-                  placeholder="例如：主要CTA按钮"
+                   :placeholder="t('editor.namePlaceholder')"
                   required
                 />
               </div>
 
               <div class="field">
-                <label class="field-label">英文名称</label>
+                <label class="field-label">{{ t('editor.englishName') }}</label>
                 <input 
                   v-model="form.nameEn" 
                   type="text" 
                   class="field-input" 
-                  placeholder="例如：Primary CTA Button"
+                   :placeholder="t('editor.englishNamePlaceholder')"
                 />
               </div>
 
               <div class="field-row">
                 <div class="field">
-                  <label class="field-label">分类 *</label>
+                  <label class="field-label">{{ t('editor.categoryRequired') }}</label>
                   <select v-model="form.category" class="field-select" required>
-                    <option value="">请选择</option>
+                    <option value="">{{ t('editor.pleaseSelect') }}</option>
                     <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                   </select>
                 </div>
 
                 <div class="field">
-                  <label class="field-label">子分类</label>
+                  <label class="field-label">{{ t('editor.subcategory') }}</label>
                   <select v-model="form.subcategory" class="field-select">
-                    <option value="">请选择</option>
+                    <option value="">{{ t('editor.pleaseSelect') }}</option>
                     <option v-for="sub in subcategories" :key="sub" :value="sub">{{ sub }}</option>
                   </select>
                 </div>
               </div>
 
               <div class="field">
-                <label class="field-label">标签（用逗号分隔）</label>
+                <label class="field-label">{{ t('editor.tagsComma') }}</label>
                 <input 
                   v-model="tagsInput" 
                   type="text" 
                   class="field-input" 
-                  placeholder="例如：主按钮, CTA, 渐变"
+                   :placeholder="t('editor.tagsPlaceholder')"
                 />
                 <div v-if="form.tags.length" class="tags-preview">
                   <span v-for="(tag, index) in form.tags" :key="index" class="tag">
@@ -86,24 +85,24 @@
 
             <!-- AI 提示词 -->
             <section class="form-group">
-              <h2 class="section-title">AI 提示词 *</h2>
+              <h2 class="section-title">{{ t('editor.aiPromptRequired') }}</h2>
               <div class="field">
                 <textarea 
                   v-model="form.prompt" 
                   class="field-textarea" 
                   rows="6"
-                  placeholder="描述如何让 AI 生成这个组件，例如：创建主要行动号召按钮。背景使用渐变色..."
+                   :placeholder="t('editor.promptPlaceholder')"
                   required
                 ></textarea>
-                <p class="field-hint">{{ form.prompt.length }} 字符</p>
+                <p class="field-hint">{{ t('editor.charCount', { count: form.prompt.length }) }}</p>
               </div>
             </section>
 
             <!-- 代码（可选） -->
             <section class="form-group">
               <h2 class="section-title">
-                代码示例
-                <span class="section-subtitle">（可选，如果有现成代码）</span>
+                {{ t('editor.codeExample') }}
+                <span class="section-subtitle">{{ t('editor.codeExampleOptional') }}</span>
               </h2>
 
               <!-- HTML -->
@@ -143,27 +142,26 @@
               </div>
             </section>
 
-            <!-- 预览配置 -->
             <section class="form-group">
-              <h2 class="section-title">预览配置</h2>
+              <h2 class="section-title">{{ t('editor.previewConfig') }}</h2>
               <div class="field">
-                <label class="field-label">预览组件名称</label>
+                <label class="field-label">{{ t('editor.previewComponentName') }}</label>
                 <input 
                   v-model="form.preview.component" 
                   type="text" 
                   class="field-input" 
-                  placeholder="例如：ButtonSet"
+                   :placeholder="t('editor.previewComponentPlaceholder')"
                 />
-                <p class="field-hint">预览基于 code_assets 中的 HTML/CSS/JS 实时渲染</p>
+                <p class="field-hint">{{ t('editor.previewHint') }}</p>
               </div>
             </section>
           </form>
         </div>
 
-        <!-- 右侧：实时预览 -->
+        <!-- 右侧：{{ t('editor.livePreview') }} -->
         <div class="preview-section">
           <div class="preview-sticky">
-            <h3 class="preview-title">实时预览</h3>
+            <h3 class="preview-title">{{ t('editor.livePreview') }}</h3>
             
             <!-- 卡片预览 -->
             <div class="preview-card-wrapper">
@@ -173,13 +171,12 @@
                   <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                   <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
-                <p>填写信息后查看预览</p>
+                <p>{{ t('editor.fillForPreview') }}</p>
               </div>
             </div>
 
-            <!-- 代码预览 -->
             <div v-if="hasCode" class="code-preview-section">
-              <h4 class="code-preview-title">代码预览</h4>
+              <h4 class="code-preview-title">{{ t('editor.codePreview') }}</h4>
               <div class="code-tabs">
                 <button 
                   v-if="form.code.html" 
@@ -284,11 +281,10 @@ onMounted(async () => {
   try {
     categories.value = await categoriesAPI.getList()
   } catch (error) {
-    console.error('获取分类失败:', error)
+    console.error(t('editor.fetchCategoriesFailed'), error)
   }
 })
 
-// 子分类选项（根据主分类动态变化）
 const subcategories = computed(() => {
   const categoryMap = {
     layouts: ['hero', 'dashboard', 'auth', 'landing', 'admin', 'sidebar', 'grid', 'masonry', 'split'],
@@ -357,15 +353,15 @@ const saveDraft = async () => {
     
     if (isEditMode.value) {
       await promptsAPI.update(route.params.id, data)
-      showToast('草稿已保存！')
+      showToast(t('editor.draftSaved'))
     } else {
       const result = await promptsAPI.create(data)
-      showToast('草稿已保存！')
+      showToast(t('editor.draftSaved'))
       router.push(`/prompt/edit/${result.id}`)
     }
   } catch (error) {
-    console.error('保存草稿失败:', error)
-    showToast(error.response?.data?.detail || '保存失败，请重试', 'error')
+    console.error(t('editor.saveDraftFailed'), error)
+    showToast(error.response?.data?.detail || t('editor.saveFailedRetry'), 'error')
   } finally {
     isSaving.value = false
   }
@@ -375,7 +371,7 @@ const saveDraft = async () => {
 const publish = async () => {
   // 验证必填字段
   if (!form.value.name || !form.value.category || !form.value.prompt) {
-    showToast('请填写所有必填字段', 'error')
+    showToast(t('editor.fillRequiredFields'), 'error')
     return
   }
 
@@ -396,18 +392,18 @@ const publish = async () => {
     // 调用发布 API
     try {
       await promptsAPI.publish(promptId)
-      showToast('发布成功！')
+      showToast(t('editor.publishSuccess'))
       setTimeout(() => router.push('/components'), 1000)
     } catch (publishError) {
       // 发布失败，可能是权限问题
-      console.warn('发布需要审核权限，已保存为草稿')
-      showToast('已保存草稿，需要管理员发布')
+      console.warn(t('editor.publishNeedsAdmin'))
+      showToast(t('editor.savedNeedAdminPublish'))
       setTimeout(() => router.push('/components'), 1000)
     }
   } catch (error) {
-    console.error('发布失败:', error)
+    console.error(t('editor.publishFailed'), error)
     // 解析验证错误
-    let message = '发布失败，请重试'
+    let message = t('editor.publishFailedRetry')
     const detail = error.response?.data?.detail
     if (Array.isArray(detail)) {
       message = detail.map(e => e.msg).join('; ')
@@ -436,8 +432,8 @@ if (isEditMode.value) {
     }
     tagsInput.value = data.tags?.join(', ') || ''
   }).catch(error => {
-    console.error('加载失败:', error)
-    showToast('加载失败', 'error')
+    console.error(t('editor.loadFailed'), error)
+    showToast(t('editor.loadFailedShort'), 'error')
     router.push('/')
   })
 }
