@@ -1,0 +1,70 @@
+﻿services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: promptui-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000/api/v1
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "120"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      backend:
+        condition: service_started
+
+  db:
+    image: postgres:16-alpine
+    container_name: promptui-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-promptui}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-promptui}
+      POSTGRES_DB: ${POSTGRES_DB:-promptui}
+    ports:
+      - "5432:5432"
+    volumes:
+      - promptui_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-promptui} -d ${POSTGRES_DB:-promptui}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: promptui-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    container_name: promptui-backend
+    env_file:
+      - ./backend/.env.example
+    environment:
+      UVICORN_RELOAD: "true"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    entrypoint: ["bash", "/app/entrypoint.sh"]
+
+volumes:
+  promptui_pgdata:
+  frontend_node_modules:
