@@ -5,7 +5,7 @@
         <img src="/logo.svg" alt="PromptUI" class="logo-icon" />
         <div class="logo-text-group">
           <span class="logo-text">PromptUI</span>
-          <span class="logo-sub">Premium UI Library</span>
+          <span class="logo-sub">{{ t('nav.premiumLibrary') }}</span>
         </div>
       </router-link>
 
@@ -27,8 +27,8 @@
           <input type="text" :placeholder="t('common.search')" class="search-input" />
         </div>
 
-        <button class="action-btn" @click="toggleLocale" :title="locale === 'zh' ? 'Switch to English' : 'Switch to Chinese'">
-          <span class="locale-text">{{ locale === 'zh' ? 'EN' : '中' }}</span>
+        <button class="action-btn" @click="toggleLocale" :title="locale === 'zh' ? t('common.switchToEnglish') : t('common.switchToChinese')">
+          <span class="locale-text">{{ locale === 'zh' ? 'EN' : 'ZH' }}</span>
         </button>
 
         <button class="action-btn" @click="themeStore.toggleTheme" :title="themeStore.isDark ? t('common.lightMode') : t('common.darkMode')">
@@ -36,7 +36,7 @@
           <svg v-else viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
         </button>
 
-        <!-- 登录/状态 -->
+        <!-- auth state -->
         <template v-if="authStore.isAuthenticated">
           <div class="user-menu">
             <button class="user-avatar" @click="isUserMenuOpen = !isUserMenuOpen">
